@@ -30,8 +30,8 @@ create_table_query = """
     """
 cur.execute(create_table_query)
 
-MAX_RECORDS = 610  # 302
-MAX_FAILED_TRIES = 100
+MAX_RECORDS = 700  # 302
+MAX_FAILED_TRIES = 300
 
 current_count_of_records_query = "select * from estexare"
 cur.execute(current_count_of_records_query)
@@ -39,6 +39,7 @@ rows = cur.fetchall()
 
 record_count = len(rows)
 failed_tries = 0
+try_counter = 0
 
 print(f"Number of current records is {record_count}.\n\n")
 
@@ -53,6 +54,8 @@ insert_estexare_query = """
     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
 while record_count <= MAX_RECORDS and failed_tries <= MAX_FAILED_TRIES:
+    try_counter += 1
+    print(f"\n>>>>>Try No.: {try_counter}")
     one_estexare = get_estekhare_data()
 
     sure_no = one_estexare['finglish']['sure_no']
@@ -69,7 +72,7 @@ while record_count <= MAX_RECORDS and failed_tries <= MAX_FAILED_TRIES:
 
     if already_exists:
         failed_tries += 1
-        print("=====Already exists!\n")
+        print(f"===Already exists! Duplicates Count: {failed_tries}\n")
         continue
 
     cur.execute(insert_estexare_query,
@@ -93,4 +96,5 @@ cur.execute(final_count_query)
 rows = cur.fetchall()
 final_count = len(rows)
 print(f"Now we have {final_count} records in our DB.")
-print(f"Number of already existed records have been fetched: {failed_tries}\n\n")
+print(
+    f"Number of already existed records have been fetched: {failed_tries}\n\n")
