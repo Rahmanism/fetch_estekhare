@@ -7,13 +7,16 @@ def get_estekhare_data(soup, container_box):
     result = container.find('h1').text
     address = container.find('h6').text.split()
     print(address)
-    if str.startswith(container_box, 'fi'):
-        sure_no = int(address[0][7:-1])
+    if str.endswith(container_box, '1'):
+        # finglish
+        sure_no = int(address[0][6:-1])
         aye_no = int(address[1][6:-1])
-    elif str.startswith(container_box, 'fa'):
+    elif str.endswith(container_box, '2'):
+        # farsi
         sure_no = int(address[0][6:-1])
         aye_no = int(address[1][5:-1])
-    else: # en
+    else:
+        # english
         sure_no = int(address[0][7:-1])
         aye_no = int(address[1][6:-1])
     h2s = container.find_all('h2')
